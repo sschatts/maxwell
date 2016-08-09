@@ -162,24 +162,25 @@ public class MaxwellReplicator extends RunLoopProcess {
 			throw new InvalidSchemaError("couldn't find table in cache for table id: " + tableId);
 		}
 
+		boolean omitNulls = context.getConfig().omitNulls;
 		switch (e.getHeader().getEventType()) {
 			case MySQLConstants.WRITE_ROWS_EVENT:
-				ew = new MaxwellWriteRowsEvent((WriteRowsEvent) e, table, filter);
+				ew = new MaxwellWriteRowsEvent((WriteRowsEvent) e, table, filter, omitNulls);
 				break;
 			case MySQLConstants.WRITE_ROWS_EVENT_V2:
-				ew = new MaxwellWriteRowsEvent((WriteRowsEventV2) e, table, filter);
+				ew = new MaxwellWriteRowsEvent((WriteRowsEventV2) e, table, filter, omitNulls);
 				break;
 			case MySQLConstants.UPDATE_ROWS_EVENT:
-				ew = new MaxwellUpdateRowsEvent((UpdateRowsEvent) e, table, filter);
+				ew = new MaxwellUpdateRowsEvent((UpdateRowsEvent) e, table, filter, omitNulls);
 				break;
 			case MySQLConstants.UPDATE_ROWS_EVENT_V2:
-				ew = new MaxwellUpdateRowsEvent((UpdateRowsEventV2) e, table, filter);
+				ew = new MaxwellUpdateRowsEvent((UpdateRowsEventV2) e, table, filter, omitNulls);
 				break;
 			case MySQLConstants.DELETE_ROWS_EVENT:
-				ew = new MaxwellDeleteRowsEvent((DeleteRowsEvent) e, table, filter);
+				ew = new MaxwellDeleteRowsEvent((DeleteRowsEvent) e, table, filter, omitNulls);
 				break;
 			case MySQLConstants.DELETE_ROWS_EVENT_V2:
-				ew = new MaxwellDeleteRowsEvent((DeleteRowsEventV2) e, table, filter);
+				ew = new MaxwellDeleteRowsEvent((DeleteRowsEventV2) e, table, filter, omitNulls);
 				break;
 			default:
 				return null;

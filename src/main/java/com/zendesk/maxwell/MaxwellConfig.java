@@ -34,6 +34,7 @@ public class MaxwellConfig extends AbstractConfig {
 
 	public BinlogPosition initPosition;
 	public boolean replayMode;
+	public boolean omitNulls = false;
 
 	public MaxwellConfig() { // argv is only null in tests
 		this.kafkaProperties = new Properties();
@@ -91,6 +92,7 @@ public class MaxwellConfig extends AbstractConfig {
 
 		parser.accepts( "__separator_6" );
 
+		parser.accepts( "omit_nulls", "exclude fields with a NULL value in the output");
 		parser.accepts( "include_dbs", "include these databases, formatted as include_dbs=db1,db2").withOptionalArg();
 		parser.accepts( "exclude_dbs", "exclude these databases, formatted as exclude_dbs=db1,db2").withOptionalArg();
 		parser.accepts( "include_tables", "include these tables, formatted as include_tables=db1,db2").withOptionalArg();
@@ -212,6 +214,12 @@ public class MaxwellConfig extends AbstractConfig {
 		if ( options.has("replay")) {
 			this.replayMode = true;
 		}
+
+		if ( properties.contains("omit_nulls") )
+			this.omitNulls = Boolean.getBoolean(properties.getProperty("omit_nulls"));
+
+		if ( options.has("omit_nulls"))
+			this.omitNulls = true;
 	}
 
 	private Properties parseFile(String filename, Boolean abortOnMissing) {

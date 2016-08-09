@@ -112,7 +112,8 @@ public class SynchronousBootstrapper extends AbstractBootstrapper {
 				table.getName(),
 				System.currentTimeMillis() / 1000,
 				table.getPKList(),
-				position);
+				position,
+				context.getConfig().omitNulls);
 	}
 
 	@Override

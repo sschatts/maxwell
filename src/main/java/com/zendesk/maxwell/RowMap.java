@@ -33,6 +33,7 @@ public class RowMap implements Serializable {
 	private final LinkedHashMap<String, Object> data;
 	private final LinkedHashMap<String, Object> oldData;
 	private final List<String> pkColumns;
+	private final boolean omitNulls;
 	private List<Pattern> excludeColumns;
 
 	private static final JsonFactory jsonFactory = new JsonFactory();
@@ -64,7 +65,7 @@ public class RowMap implements Serializable {
 			};
 
 	public RowMap(String type, String database, String table, Long timestamp, List<String> pkColumns,
-			BinlogPosition nextPosition) {
+			BinlogPosition nextPosition, boolean omitNulls) {
 		this.rowType = type;
 		this.database = database;
 		this.table = table;
@@ -73,12 +74,13 @@ public class RowMap implements Serializable {
 		this.oldData = new LinkedHashMap<>();
 		this.nextPosition = nextPosition;
 		this.pkColumns = pkColumns;
+		this.omitNulls = omitNulls;
 		this.approximateSize = 100L; // more or less 100 bytes of overhead
 	}
 
 	public RowMap(String type, String database, String table, Long timestamp, List<String> pkColumns,
-            BinlogPosition nextPosition, List<Pattern> excludeColumns) {
-		this(type, database, table, timestamp, pkColumns, nextPosition);
+            BinlogPosition nextPosition, boolean omitNulls, List<Pattern> excludeColumns) {
+		this(type, database, table, timestamp, pkColumns, nextPosition, omitNulls);
 		this.excludeColumns = excludeColumns;
 	}
 
@@ -215,7 +217,7 @@ public class RowMap implements Serializable {
 			}
 		}
 
-		writeMapToJSON("data", this.data, false);
+		writeMapToJSON("data", this.data, !this.omitNulls);
 
 		if ( !this.oldData.isEmpty() ) {
 			writeMapToJSON("old", this.oldData, true);

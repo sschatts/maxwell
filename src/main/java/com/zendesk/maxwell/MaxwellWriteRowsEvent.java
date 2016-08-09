@@ -17,13 +17,13 @@ public class MaxwellWriteRowsEvent extends MaxwellAbstractRowsEvent {
 		return event.getRows();
 	}
 
-	public MaxwellWriteRowsEvent(WriteRowsEvent e, Table t, MaxwellFilter f) {
-		super(e, t, f);
+	public MaxwellWriteRowsEvent(WriteRowsEvent e, Table t, MaxwellFilter f, boolean omitNulls) {
+		super(e, t, f, omitNulls);
 		this.event = e;
 	}
 
-	public MaxwellWriteRowsEvent(WriteRowsEventV2 e2, Table table, MaxwellFilter filter) {
-		super(e2, table, filter);
+	public MaxwellWriteRowsEvent(WriteRowsEventV2 e2, Table table, MaxwellFilter filter, boolean omitNulls) {
+		super(e2, table, filter, omitNulls);
 		WriteRowsEvent e =  new WriteRowsEvent(e2.getHeader());
 
 		e.setBinlogFilename(e2.getBinlogFilename());

@@ -28,14 +28,16 @@ public abstract class MaxwellAbstractRowsEvent extends AbstractRowEvent {
 	protected final Table table;
 	protected final String database;
 	protected final MaxwellFilter filter;
+	protected final boolean omitNull;
 
-	public MaxwellAbstractRowsEvent(AbstractRowEvent e, Table table, MaxwellFilter f) {
+	public MaxwellAbstractRowsEvent(AbstractRowEvent e, Table table, MaxwellFilter f, boolean omitNull) {
 		this.tableId = e.getTableId();
 		this.event = e;
 		this.header = e.getHeader();
 		this.table = table;
 		this.database = table.getDatabase();
 		this.filter = f;
+		this.omitNull = omitNull;
 	}
 
 	@Override
@@ -174,7 +176,9 @@ public abstract class MaxwellAbstractRowsEvent extends AbstractRowEvent {
 				getTable().getName(),
 				getHeader().getTimestamp() / 1000,
 				table.getPKList(),
-				this.getNextBinlogPosition());
+				this.getNextBinlogPosition(),
+				this.omitNull
+				);
 	}
 
 	protected RowMap buildRowMap(List<Pattern> excludeColumns) {
@@ -185,6 +189,7 @@ public abstract class MaxwellAbstractRowsEvent extends AbstractRowEvent {
 				getHeader().getTimestamp() / 1000,
 				table.getPKList(),
 				this.getNextBinlogPosition(),
+				this.omitNull,
 				excludeColumns);
 	}
 
