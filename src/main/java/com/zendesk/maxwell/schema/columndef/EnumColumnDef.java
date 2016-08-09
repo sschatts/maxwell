@@ -29,7 +29,7 @@ public class EnumColumnDef extends EnumeratedColumnDef {
 		Integer i = (Integer) value;
 
 		if ( i == 0 )
-			return null;
+			return "";
 		else
 			return enumValues[((Integer) value) - 1];
 	}
